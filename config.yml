@@ -1,0 +1,245 @@
+## setting dictionary at https://docs.profiling.ydata.ai/latest/advanced_settings/available_settings/
+
+# Title of the document
+title: Report
+
+# Metadata
+dataset:
+  description: ""
+  creator: ""
+  author: ""
+  copyright_holder: ""
+  copyright_year: ""
+  url: ""
+
+variables:
+  descriptions: {}
+
+# infer dtypes
+infer_dtypes: true
+
+# Show the description at each variable (in addition to the overview tab)
+show_variable_description: true
+
+# Number of workers (0=multiprocessing.cpu_count())
+pool_size: 0  # When set to zero, it is set to the number of CPUs available.
+
+# Show the progress bar
+progress_bar: true
+
+# Per variable type description settings
+vars:
+  num:
+    quantiles:
+      - 0.05
+      - 0.25
+      - 0.5
+      - 0.75
+      - 0.95
+    skewness_threshold: 20
+    low_categorical_threshold: 5
+    chi_squared_threshold: 0.999  # Set to zero to disable
+  cat:
+    length: false
+    characters: false
+    words: false
+    cardinality_threshold: 50
+    imbalance_threshold: 0.5
+    n_obs: 5
+    chi_squared_threshold: 0.999  # Set to zero to disable
+    coerce_str_to_date: false
+    redact: false
+    histogram_largest: 50
+    stop_words: []
+    dirty_categories: false
+    dirty_categories_threshold: 0.85
+  bool:
+    n_obs: 3
+    imbalance_threshold: 0.5  # Warn if the imbalance score is above this threshold.
+    # string to boolean mapping dict
+    mappings:
+      t: true
+      f: false
+      yes: true
+      no: false
+      y: true
+      n: false
+      "true": true
+      "false": false
+  path:
+    active: false
+  file:
+    active: false
+  image:
+    active: false
+    exif: false
+    hash: false
+  url:
+    active: false
+  timeseries:
+    active: true  # needs to set tsmode = true otherwise this config will be overriden as false
+    autocorrelation: 0.7
+    lags:
+      - 1
+      - 7
+      - 12
+      - 24
+      - 30
+    significance: 0.05
+    pacf_acf_lag: 100
+    autolag: AIC
+    maxlag: null
+
+# Sort the variables. Possible values: "ascending", "descending" or null (leaves original sorting)
+sort: null
+
+# which diagrams to show
+missing_diagrams:
+  bar: true
+  matrix: true
+  heatmap: true
+
+correlation_table: true
+correlations:
+  pearson:
+  # linear correlation coefficient
+    calculate: true
+    n_bins: 10
+    warn_high_correlations: true
+    threshold: 0.9
+  spearman:
+  # measures the strength + direction of monotonic (not inverse movement) association between two variables
+  # works for non-parametric (not just non-linear) distributions, i.e. exp/log but not hyperbolic
+    calculate: false
+    n_bins: 10
+    warn_high_correlations: true
+    threshold: 0.9
+  kendall:
+  # Kendall rank correlation coefficient is a statistic used to measure the ordinal association between two measured quantities. Kendall's is often used when data doesn't meet one of the requirements of Pearson's correlation.
+    calculate: false
+    n_bins: 10
+    warn_high_correlations: true
+    threshold: 0.9
+  phi_k:
+  # Phi K is especially suitable for working with mixed-type variables. Using this coefficient we can find (un)expected correlation and evaluate their statistical significance.
+    calculate: false
+    n_bins: 10
+    warn_high_correlations: true
+    threshold: 0.9
+  cramers:
+  # Cramers is a correlation matrix that is commonly used to examine the association between categorical variables when there is more than 2x2 contingency.
+    calculate: false
+    n_bins: 10
+    warn_high_correlations: true
+    threshold: 0.9
+  auto:
+  # numerical to numerical variable: Spearman correlation coefficient
+  # categorical to categorical variable: Cramer's V association coefficient
+  # numerical to categorical: Cramer's V with the numerical variable discretized automatically
+    calculate: true
+    n_bins: 10
+    warn_high_correlations: true
+    threshold: 0.9
+
+# Bivariate / Pairwise relations
+interactions:
+  # to capture non-linear relationships not captured by correlations
+  targets: []  # only interactions between these and all other variables are computed.
+  continuous: true
+
+# For categorical
+categorical_maximum_correlation_distinct: 100
+
+report:
+  precision: 10
+
+# Plot-specific settings
+plot:
+  # Image format (svg or png)
+  image_format: svg
+  dpi: 800
+
+  scatter_threshold: 1000
+
+  correlation:
+    cmap: RdBu
+    bad: "#000000"
+
+  missing:
+    cmap: RdBu
+    # Force labels when there are > 50 variables
+    force_labels: true
+
+  cat_frequency:
+    show: true  # if false, the category frequency plot is turned off
+    type: bar  # options: 'bar', 'pie'
+    max_unique: 0
+    colors: null  # use null for default or give a list of matplotlib recognized strings
+
+  histogram:
+    x_axis_labels: true
+
+    # Number of bins (set to 0 to automatically detect the bin size)
+    bins: 50
+
+    # Maximum number of bins (when bins=0)
+    max_bins: 250
+
+  font_path: null
+
+# The number of observations to show
+n_obs_unique: 10
+n_extreme_obs: 10
+n_freq_table_max: 10
+
+# Use `deep` flag for memory_usage
+memory_deep: false
+
+# Configuration related to the duplicates
+duplicates:
+  head: 5
+  key: "# duplicates"
+
+# Configuration related to the samples area
+samples:
+  head: 10
+  tail: 10
+  random: 10
+
+# Configuration related to the rejection of variables
+reject_variables: true
+
+# When in a Jupyter notebook
+notebook:
+  iframe:
+    height: 800px
+    width: 100%
+    # or 'src'
+    attribute: srcdoc
+
+html:
+  # Minify the html
+  minify_html: true
+
+  # Offline support
+  use_local_assets: true
+
+  # If true, single file, else directory with assets
+  inline: true
+
+  # Show navbar
+  navbar_show: true
+
+  # Assets prefix if inline = true
+  assets_prefix: true
+
+  # Styling options for the HTML report
+  style:
+    theme: united  # Select a bootswatch theme. Available options: flatly (dark blue) and united (orange)
+    logo: ""
+    primary_colors:
+      - "#0d6efd"
+      - "#dc3545"
+      - "#198754"
+
+  full_width: true
